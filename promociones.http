@@ -1,0 +1,6 @@
+@reseñas_HostAddress = http://localhost:5100
+
+GET {{reseñas_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
