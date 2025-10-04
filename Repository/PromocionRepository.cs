@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using promociones.Data;
+using promociones.Dtos.Promocion;
 using promociones.Interfaces;
 using promociones.Models;
 
@@ -13,10 +14,56 @@ namespace promociones.Repository
             _context = context;
         }
 
-        public Task<List<Promocion>> GetAllAsync()
+        public async Task<Promocion> CreateAsync(Promocion promocion)
         {
-            return _context.Promociones.ToListAsync();
+            await _context.Promociones.AddAsync(promocion);
+            await _context.SaveChangesAsync();
+            return promocion;
         }
 
+        public async Task<Promocion?> DeleteAsync(int id)
+        {
+            var promocion = await _context.Promociones.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (promocion == null)
+            {
+                return null;
+            }
+
+            _context.Promociones.Remove(promocion);
+            await _context.SaveChangesAsync();
+            return promocion;
+        }
+
+
+        public async Task<List<Promocion>> GetAllAsync()
+        {
+            return await _context.Promociones.ToListAsync();
+        }
+
+        public async Task<Promocion?> GetByIdAsync(int id)
+        {
+            return await _context.Promociones.FindAsync(id);
+        }
+
+        public async Task<Promocion?> UpdateAsync(int id, UpdatePromocionRequestDto promocion)
+        {
+            var existingPromocion = await _context.Promociones.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (existingPromocion == null)
+            {
+                return null;
+            }
+
+            existingPromocion.Descripcion = promocion.Descripcion;
+            existingPromocion.Monto = promocion.Monto;
+            existingPromocion.Porcentaje = promocion.Porcentaje;
+            existingPromocion.Fecha_inicio = promocion.Fecha_inicio.ToUniversalTime();
+            existingPromocion.Fecha_limite = promocion.Fecha_limite.ToUniversalTime();
+
+            await _context.SaveChangesAsync();
+
+            return existingPromocion;
+        }
     }
 }

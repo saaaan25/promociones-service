@@ -32,7 +32,7 @@ namespace promociones.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var promocion = await _context.Promociones.FindAsync(id);
+            var promocion = await _promocionRepository.GetByIdAsync(id);
 
             if (promocion == null)
             {
@@ -47,8 +47,7 @@ namespace promociones.Controllers
         {
             var promocion = insertDto.ToPromocionFromCreateDto();
 
-            await _context.Promociones.AddAsync(promocion);
-            await _context.SaveChangesAsync();
+            await _promocionRepository.CreateAsync(promocion);
 
             return CreatedAtAction(nameof(GetById), new { id = promocion.Id }, promocion.ToPromocionDto());
         }
@@ -57,20 +56,12 @@ namespace promociones.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePromocionRequestDto updateDto)
         {
-            var promocion = await _context.Promociones.FirstOrDefaultAsync(p => p.Id == id);
+            var promocion = await _promocionRepository.UpdateAsync(id, updateDto);
 
             if (promocion == null)
             {
                 return NotFound();
             }
-
-            promocion.Descripcion = updateDto.Descripcion;
-            promocion.Monto = updateDto.Monto;
-            promocion.Porcentaje = updateDto.Porcentaje;
-            promocion.Fecha_inicio = updateDto.Fecha_inicio.ToUniversalTime();
-            promocion.Fecha_limite = updateDto.Fecha_limite.ToUniversalTime();
-
-            await _context.SaveChangesAsync();
 
             return Ok(promocion.ToPromocionDto());
         }
@@ -79,15 +70,12 @@ namespace promociones.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var promocion = await _context.Promociones.FirstOrDefaultAsync(p => p.Id == id);
+            var promocion = await _promocionRepository.DeleteAsync(id);
 
             if (promocion == null)
             {
                 return NotFound();
             }
-
-            _context.Promociones.Remove(promocion);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
