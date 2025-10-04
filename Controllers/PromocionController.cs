@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using promociones.Data;
+using promociones.Mappers;
 
 namespace promociones.Controllers
 {
@@ -16,7 +17,7 @@ namespace promociones.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var promociones = _context.Promociones.ToList();
+            var promociones = _context.Promociones.ToList().Select(p => p.ToPromocionDto());
 
             return Ok(promociones);
         }
@@ -31,7 +32,7 @@ namespace promociones.Controllers
                 return NotFound();
             }
 
-            return Ok(promocion);
+            return Ok(promocion.ToPromocionDto());
         }
     }
 }
