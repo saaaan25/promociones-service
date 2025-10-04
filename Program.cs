@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using DotNetEnv;
 using promociones.Data;
+using promociones.Interfaces;
+using promociones.Repository;
 Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,8 @@ if (string.IsNullOrEmpty(connectionString))
 
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<IPromocionRepository, PromocionRepository>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
