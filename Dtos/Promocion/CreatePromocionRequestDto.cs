@@ -1,8 +1,7 @@
 namespace promociones.Dtos.Promocion
 {
-    public class PromocionDto
+    public class CreatePromocionRequestDto
     {
-        public int Id { get; set; }
         public string Descripcion { get; set; } = string.Empty;
         public decimal? Monto { get; set; }
         public decimal? Porcentaje { get; set; }

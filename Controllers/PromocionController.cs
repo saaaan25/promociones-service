@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using promociones.Data;
+using promociones.Dtos.Promocion;
 using promociones.Mappers;
 
 namespace promociones.Controllers
@@ -33,6 +34,17 @@ namespace promociones.Controllers
             }
 
             return Ok(promocion.ToPromocionDto());
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] CreatePromocionRequestDto promocionDto)
+        {
+            var promocionModel = promocionDto.ToPromocionFromCreateDto();
+
+            _context.Promociones.Add(promocionModel);
+            _context.SaveChanges();
+            
+            return CreatedAtAction(nameof(GetById), new { id = promocionModel.Id }, promocionModel.ToPromocionDto());
         }
     }
 }
