@@ -39,12 +39,34 @@ namespace promociones.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreatePromocionRequestDto promocionDto)
         {
-            var promocionModel = promocionDto.ToPromocionFromCreateDto();
+            var promocion = promocionDto.ToPromocionFromCreateDto();
 
-            _context.Promociones.Add(promocionModel);
+            _context.Promociones.Add(promocion);
             _context.SaveChanges();
-            
-            return CreatedAtAction(nameof(GetById), new { id = promocionModel.Id }, promocionModel.ToPromocionDto());
+
+            return CreatedAtAction(nameof(GetById), new { id = promocion.Id }, promocion.ToPromocionDto());
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] UpdatePromocionRequestDto updateDto)
+        {
+            var promocion = _context.Promociones.FirstOrDefault(p => p.Id == id);
+
+            if (promocion == null)
+            {
+                return NotFound();
+            }
+
+            promocion.Descripcion = updateDto.Descripcion;
+            promocion.Monto = updateDto.Monto;
+            promocion.Porcentaje = updateDto.Porcentaje;
+            promocion.Fecha_inicio = updateDto.Fecha_inicio.ToUniversalTime();
+            promocion.Fecha_limite = updateDto.Fecha_limite.ToUniversalTime();
+
+            _context.SaveChanges();
+
+            return Ok(promocion.ToPromocionDto());
         }
     }
 }
