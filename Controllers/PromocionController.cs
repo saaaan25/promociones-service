@@ -68,5 +68,22 @@ namespace promociones.Controllers
 
             return Ok(promocion.ToPromocionDto());
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete([FromRoute] int id)
+        {
+            var promocion = _context.Promociones.FirstOrDefault(p => p.Id == id);
+
+            if (promocion == null)
+            {
+                return NotFound();
+            }
+
+            _context.Promociones.Remove(promocion);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
