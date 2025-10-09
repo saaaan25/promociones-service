@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using promociones.Data;
@@ -11,9 +12,11 @@ using promociones.Data;
 namespace promociones.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251009042321_updateProductoTable")]
+    partial class updateProductoTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +38,9 @@ namespace promociones.Migrations
 
                     b.Property<int?>("IdPromocion")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Imagen")
+                        .HasColumnType("text");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

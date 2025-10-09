@@ -4,7 +4,8 @@ namespace promociones.Models
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
-        public string Descripcion { get; set; } = string.Empty;
-        public int? Id_Promocion { get; set; }
+        public string? Descripcion { get; set; }
+        public bool TienePromocion { get; set; }
+        public int? IdPromocion { get; set; }
     }
 }
