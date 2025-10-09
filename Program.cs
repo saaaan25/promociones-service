@@ -4,6 +4,7 @@ using DotNetEnv;
 using promociones.Data;
 using promociones.Interfaces;
 using promociones.Repository;
+using promociones.Services;
 Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ if (string.IsNullOrEmpty(connectionString))
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddHttpClient<ProductoSyncService>();
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IPromocionRepository, PromocionRepository>();
 
 builder.Services.AddControllers()
