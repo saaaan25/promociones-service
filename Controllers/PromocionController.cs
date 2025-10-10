@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using promociones.Data;
+using promociones.Dtos.Producto;
 using promociones.Dtos.Promocion;
 using promociones.Interfaces;
 using promociones.Mappers;
@@ -64,6 +65,28 @@ namespace promociones.Controllers
             }
 
             return Ok(promocion.ToPromocionDto());
+        }
+
+        [HttpGet("{id}/productos")]
+        public async Task<ActionResult<IEnumerable<ProductoDto>>> GetProductosPorPromocion([FromRoute] int id)
+        {
+            var promocion = await _promocionRepository.GetByIdAsync(id);
+            if (promocion == null)
+                return NotFound(new { mensaje = $"Promoción con id {id} no encontrada." });
+
+            var productos = await _context.Productos
+                .Where(p => p.IdPromocion == id)
+                .Select(p => new ProductoDto
+                {
+                    Id = p.Id,
+                    Nombre = p.Nombre,
+                    Descripcion = p.Descripcion,
+                    TienePromocion = p.TienePromocion,
+                    IdPromocion = p.IdPromocion
+                })
+                .ToListAsync();
+
+            return Ok(productos);
         }
 
         [HttpDelete]

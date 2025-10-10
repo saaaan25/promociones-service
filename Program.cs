@@ -21,9 +21,13 @@ if (string.IsNullOrEmpty(connectionString))
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddHttpClient<ProductoSyncService>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IPromocionRepository, PromocionRepository>();
+
+builder.Services.AddHttpClient<ProductoSyncService>();
+builder.Services.AddScoped<ProductoSyncService>();
+
+builder.Services.AddHostedService<promociones.Services.PeriodicSyncService>();
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
